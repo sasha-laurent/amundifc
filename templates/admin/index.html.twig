@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Admin{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Administration</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            {% if nextGame is not empty %}
+            <h2>Prochain match</h2>
+            {% else %}
+            <h2>Créer un match</h2>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Gérer les inscrits</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Générer les équipes</h2>
+        </div>
+    </div>
+{% endblock %}
