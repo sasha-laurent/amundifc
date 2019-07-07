@@ -4,7 +4,7 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-12">
-            <h1>Amundi FC</h1>
+            <h1>Inscriptions pour le prochain match</h1>
         </div>
         <div class="col-sm-6">
             {% if nextGame is not empty %}
@@ -17,6 +17,16 @@
         <div class="col-sm-6">
             {% if nextGame is not empty %}
                 <h2>Les inscrits</h2>
+                {% for team in nextGame.teams %}
+                    {% if loop.index == 2 %}
+                        <hr/>
+                    {% endif %}
+                    <ul>
+                        {% for player in team.players %}
+                            <li>{{ player.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
             {% endif %}
         </div>
     </div>

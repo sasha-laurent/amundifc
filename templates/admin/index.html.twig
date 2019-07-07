@@ -8,22 +8,17 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             {% if nextGame is not empty %}
-            <h2>Prochain match</h2>
+            <h2>Prochain match : {{ nextGame.date|date('d/m/Y') }}</h2>
+            <h3><em>Générer les équipes</em></h3>
             {% else %}
             <h2>Créer un match</h2>
+            {{ form(newGameForm) }}
             {% endif %}
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             <h2>Gérer les inscrits</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Générer les équipes</h2>
         </div>
     </div>
 {% endblock %}

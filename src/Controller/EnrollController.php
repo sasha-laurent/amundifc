@@ -23,7 +23,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\PlayerType;
 use App\Entity\Player;
+use App\Service\GameManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use App\Repository\GameRepository;
 
 
@@ -39,20 +41,29 @@ class EnrollController extends AbstractController
      * 
      * @return type
      */
-    public function indexAction(Request $request, GameRepository $gameRepo) 
+    public function indexAction(Request $request, GameRepository $gameRepo, GameManager $gameManager) 
     {
         $nextGame = $gameRepo->findNextGame();
         $player = new Player();
+        $session = new Session();
         $form = $this->createForm(PlayerType::class, $player);
         
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$nextGame instanceof Game){
+                $session->getFlashBag()->add('error', 'Pas de prochain match défini.');
+            }
+            
             $player = $form->getData();
+            $team = $gameManager->getTeamToFill($nextGame);
+            $team->addPlayer($player);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($player);
             $entityManager->flush();
+            
+            $session->getFlashBag()->add('info', 'Inscription réussie ! Tu peux consulter les équipes.');
 
             return $this->redirectToRoute('teams');
         }

@@ -21,6 +21,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Game;
+use App\Form\GameType;
+use App\Repository\GameRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of AdminController
@@ -34,10 +38,29 @@ class AdminController extends AbstractController
      * 
      * @return type
      */
-    public function indexAction(\App\Repository\GameRepository $gameRepo) 
+    public function indexAction(Request $request, GameRepository $gameRepo) 
     {
         $nextGame = $gameRepo->findNextGame();
         
-        return $this->render('admin/index.html.twig', ['nextGame' => $nextGame]);
+        $newGame = new Game();
+        $newGameForm = $this->createForm(GameType::class, $newGame);
+        
+        $newGameForm->handleRequest($request);
+
+        if ($newGameForm->isSubmitted() && $newGameForm->isValid()) {
+            $newGame = $newGameForm->getData();
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($newGame);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin');
+        }
+        
+        
+        return $this->render('admin/index.html.twig', [
+            'nextGame' => $nextGame,
+            'newGameForm' => $newGameForm->createView()
+        ]);
     }
 }

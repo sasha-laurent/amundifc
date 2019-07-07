@@ -17,25 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Description of PlayerType
- *
- * @author sasha
- */
 namespace App\Form;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use App\Entity\Player;
+use App\Entity\Game;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class PlayerType extends AbstractType
-{    
+/**
+ * Description of GameType
+ *
+ * @author sasha
+ */
+class GameType extends AbstractType 
+{
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('date', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => ['class' => 'js-datepicker']
+            ])
             ->add('save', SubmitType::class)
         ;
     }
@@ -43,7 +48,7 @@ class PlayerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Player::class,
+            'data_class' => Game::class,
         ]);
     }
 }

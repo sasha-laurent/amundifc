@@ -1,6 +1,4 @@
-<?php
-
-/*
+/* 
  * Copyright (C) 2019 sasha
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,30 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\GameRepository;
-
-/**
- * Description of AdminController
- *
- * @author sasha
- */
-class TeamsController extends AbstractController
-{
-    /**
-     * @Route("/teams", name="teams")
-     * 
-     * @param GameRepository $gameRepo
-     * 
-     * @return type
-     */
-    public function indexAction(GameRepository $gameRepo) 
-    {
-        return $this->render('teams/index.html.twig', [
-            'nextGame' => $gameRepo->findNextGame()
-        ]);
-    }
-}
+$(document).ready(function() {
+    $('.js-datepicker').datepicker({
+        format: 'yyyy-mm-dd'
+    });
+});

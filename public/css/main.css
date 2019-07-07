@@ -1,0 +1,59 @@
+/*
+Copyright (C) 2019 sasha
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/* 
+    Created on : 30 juin 2019, 22:51:35
+    Author     : sasha
+*/
+html {
+  height: 100%;
+}
+
+body {
+    background-color: #33335F;
+    color: #33335F; 
+    height: 100%;
+}
+
+.background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.1;
+}
+
+.container {
+    margin-top: 20px;
+    background: #F8F9FA;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 5px rgba(60,60,60,0.2);
+}
+
+.nav-title {
+    margin-right: 10px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    vertical-align: central;
+    color: #F8F9FA;
+    padding: 20px 0;
+    font-weight: 700;
+    width: 100%;
+}

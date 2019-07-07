@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Exception\TooManyTeamsException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GameRepository")
@@ -60,6 +61,10 @@ class Game
 
     public function addTeam(Team $team): self
     {
+        if (count($this->teams) >= 2) {
+            throw new TooManyTeamsException('You can\'t have more than two teams !');
+        }
+        
         if (!$this->teams->contains($team)) {
             $this->teams[] = $team;
             $team->setRelatedGame($this);
