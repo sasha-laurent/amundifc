@@ -25,6 +25,7 @@ use App\Entity\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Description of AdminController
@@ -36,11 +37,15 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      * 
-     * @return type
+     * @param Request        $request
+     * @param GameRepository $gameRepo
+     * 
+     * @return Response
      */
     public function indexAction(Request $request, GameRepository $gameRepo) 
     {
-        $nextGame = $gameRepo->findNextGame();
+        $nextGames = $gameRepo->findNextGames();
+        $nextGame = array_shift($nextGames);
         
         $newGame = new Game();
         $newGameForm = $this->createForm(GameType::class, $newGame);
@@ -60,6 +65,7 @@ class AdminController extends AbstractController
         
         return $this->render('admin/index.html.twig', [
             'nextGame' => $nextGame,
+            'otherGames' => $nextGames,
             'newGameForm' => $newGameForm->createView()
         ]);
     }

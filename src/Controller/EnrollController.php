@@ -65,7 +65,7 @@ class EnrollController extends AbstractController
             
             $session->getFlashBag()->add('info', 'Inscription réussie ! Tu peux consulter les équipes.');
 
-            return $this->redirectToRoute('teams');
+            return $this->redirectToRoute('admin');
         }
         
         return $this->render('enroll/index.html.twig', [

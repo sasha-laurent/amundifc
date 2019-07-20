@@ -1,0 +1,11 @@
+<tr class="player-row">
+    <td>
+        <span class="player-name {{ playerNameFloat }}">{{ player.name }}</span>
+        <button data-url="{{ path('switch_team', { game: nextGame.id, player: player.id }) }}" class="btn btn-primary {{ switchButtonFloat }}" onclick="switchTeam(this);">
+            <i class="fas fa-arrows-alt-h"></i>
+        </button>
+        <button data-url="{{ path('remove_player', { game: nextGame.id, player: player.id }) }}" class="btn btn-danger {{ switchButtonFloat }}" onclick="removePlayer(this);">
+            <i class="fas fa-times"></i>
+        </button>
+    </td>                          
+</tr>

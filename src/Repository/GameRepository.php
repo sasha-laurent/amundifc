@@ -36,6 +36,22 @@ class GameRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Game 
+     */
+    public function findNextGames()
+    {
+        $now = new \DateTime();
+        
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.date > :date')
+            ->setParameter('date', $now)
+            ->orderBy('m.date', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     /*
     public function findOneBySomeField($value): ?Game
     {

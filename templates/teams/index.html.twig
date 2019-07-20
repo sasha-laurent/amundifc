@@ -3,24 +3,24 @@
 {% block title %}Admin{% endblock %}
 {% block body %}
     <div class="row">
+    {% if nextGame is not empty and nextGame.teams is not empty %}
         <div class="col-sm-12">
-            <h1>Les équipes de cette semaine</h1>
+            <h1>Les équipes de cette semaine ({{ nextGame.date|date('d/m/Y') }})</h1>
         </div>
-        {% if nextGame is not empty and nextGame.teams is not empty %}
-            {% for team in nextGame.teams %}
-                <div class="col-sm-6">
-                    <h2>Équipe {{ loop.index }}</h2>
-                    <ul>
-                        {% for player in team.players %}
-                            <li>{{ player.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-sm-12">
-                <h2><em>Pas encore d'équipe créée.</em></h2>
+        {% for team in nextGame.teams %}
+            <div class="col-sm-6">
+                <h2>Équipe {{ loop.index }}</h2>
+                <ul>
+                    {% for player in team.players %}
+                        <li>{{ player.name }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-        {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="col-sm-12">
+            <h2><em>Pas encore d'équipe créée.</em></h2>
+        </div>
+    {% endif %}
     </div>
 {% endblock %}

@@ -15,9 +15,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+function switchTeam(element) {
+    let switchUrl = $(element).attr('data-url');
+    let playerRow = $(element).parent().parent();
+
+    playerRow.fadeOut(300, function(){
+        jQuery
+            .ajax({
+                url: switchUrl
+            })
+            .done(function(result){
+                if (false !== result.newTeamId) {
+                    playerRow.children().first().children().toggleClass('float-left');
+                    playerRow.children().first().children().toggleClass('float-right');
+                    playerRow.appendTo('tbody[data-team="'+result.newTeamId+'"]');
+                }
+            })
+            .fail(function(result){
+            })
+            .always(function(result) {
+                playerRow.fadeIn(300);
+            });
+    });
+}
+
+function removePlayer(element) {
+    let removePlayerUrl = $(element).attr('data-url');
+    let playerRow = $(element).parent().parent();
+
+    playerRow.fadeOut(300, function(){
+        jQuery
+            .ajax({
+                url: removePlayerUrl
+            })
+            .done(function(result){
+                if (false !== result.removed) {
+                    playerRow.remove();
+                }
+            })
+            .fail(function(result){
+                playerRow.fadeIn(300);
+            });
+    });
+}
 
 $(document).ready(function() {
     $('.js-datepicker').datepicker({
+        weekStart: 1,
+        daysOfWeekDisabled: "0,6",
+        autoclose: true,
         format: 'yyyy-mm-dd'
     });
 });

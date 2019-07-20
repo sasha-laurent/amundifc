@@ -7,18 +7,44 @@
             <h1>Administration</h1>
         </div>
     </div>
+    {% if nextGame is not empty %}
     <div class="row">
-        <div class="col-sm-6">
-            {% if nextGame is not empty %}
+        <div class="col-sm-12">
             <h2>Prochain match : {{ nextGame.date|date('d/m/Y') }}</h2>
-            <h3><em>Générer les équipes</em></h3>
-            {% else %}
+        </div>
+        <div class="col-sm-12">
+            <h2>Gérer les équipes</h2>
+            <div class="row">
+            {% for team in nextGame.teams %} 
+                {% set playerNameFloat = 'float-right' %}
+                {% set switchButtonFloat = 'float-left' %}
+                {% if loop.index == 1 %}
+                    {% set playerNameFloat = 'float-left' %}
+                    {% set switchButtonFloat = 'float-right' %}
+                {% endif %}
+                <div class="col-sm-6 team team-{{ loop.index }}">
+                    <table class="table table-striped">
+                        <tbody data-team="{{ team.id }}">
+                        {% for player in team.players %}
+                            {% include('admin/player_row.html.twig') %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Autres matchs prévus : {% for game in otherGames %}{{ game.date|date('d/m/Y') }}{% if not loop.last %}, {% endif %}{% endfor %}</h2>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12">
             <h2>Créer un match</h2>
             {{ form(newGameForm) }}
-            {% endif %}
-        </div>
-        <div class="col-sm-6">
-            <h2>Gérer les inscrits</h2>
         </div>
     </div>
 {% endblock %}
