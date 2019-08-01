@@ -1,22 +1,25 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Admin{% endblock %}
+{% block title %}Inscris-toi !{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col-sm-12">
             <h1>Inscriptions pour le prochain match</h1>
-        </div>
-        <div class="col-sm-6">
             {% if nextGame is not empty %}
-                <h2>Inscris-toi pour le {{ nextGame.date|date('d/m/Y') }} !</h2>
+                {% if nextGame.isFull %}
+                <h3>Désolé, le prochain match est complet.</h3>
+                {% else %}
+                <h3>Inscris-toi pour le {{ nextGame.date|date('d/m/Y') }} !</h3>
                 {{ form(form) }}
+                {% endif %}
             {% else %}
-                <h3><em>Pas de prochain match prévu pour le moment.<em></h3>
+                <h3>Pas de prochain match prévu pour le moment.</h3>
             {% endif %}
-        </div>
-        <div class="col-sm-6">
+            
             {% if nextGame is not empty %}
-                <h2>Les inscrits</h2>
+                <hr/>
+                <h3>Les inscrits</h3>
+                <div class="player-list">
                 {% for team in nextGame.teams %}
                     {% if loop.index == 2 %}
                         <hr/>
@@ -27,6 +30,7 @@
                         {% endfor %}
                     </ul>
                 {% endfor %}
+                </div>
             {% endif %}
         </div>
     </div>

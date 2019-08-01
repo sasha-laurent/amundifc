@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Game;
 use App\Entity\Player;
+use App\Entity\Team;
 use App\Service\PlayerManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -44,10 +45,21 @@ class AjaxController  extends AbstractController {
      */
     public function switchTeamAction(Game $game, Player $player, PlayerManager $playerManager) 
     {        
+        $newTeam = $playerManager->switchTeam($game, $player);
+        $alerts = [];
+        
+        if ($newTeam->isFull(Team::MAX_PLAYERS + 1)) {
+            $alerts []= [
+                'type' => 'warning', 
+                'message' => 'One team has more than the maximum amount of players !'
+            ];
+        }
+        
         return new JsonResponse([
             'game' => $game->getId(),
             'player' => $player->getId(),
-            'newTeamId' => $playerManager->switchTeam($game, $player)
+            'newTeamId' => $newTeam->getId(),
+            'alerts' => $alerts
         ]);
     }
 

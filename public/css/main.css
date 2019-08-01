@@ -39,12 +39,25 @@ body {
 .container {
     margin-top: 20px;
     background: #F8F9FA;
-    border-radius: 5px;
+    border-radius: 0;
     box-shadow: 0px 0px 10px 5px rgba(60,60,60,0.2);
 }
 
 .nav-title {
     margin-right: 10px;
+}
+
+.flash-messages {
+    padding: 0;
+    background-color: transparent;
+}
+
+.flash-messages .alert {
+    border-radius: 0;
+}
+
+.player-list {
+    
 }
 
 footer {

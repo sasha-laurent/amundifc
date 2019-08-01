@@ -23,10 +23,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\PlayerType;
 use App\Entity\Player;
+use App\Entity\Game;
 use App\Service\GameManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use App\Repository\GameRepository;
+use App\FormHandler\FormHandler;
 
 
 /**
@@ -41,36 +42,30 @@ class EnrollController extends AbstractController
      * 
      * @return type
      */
-    public function indexAction(Request $request, GameRepository $gameRepo, GameManager $gameManager) 
+    public function indexAction(Request $request, GameManager $gameManager, FormHandler $formHandler) 
     {
-        $nextGame = $gameRepo->findNextGame();
-        $player = new Player();
-        $session = new Session();
-        $form = $this->createForm(PlayerType::class, $player);
+        $nextGame = !empty($gameManager->findNextGames()) ? $gameManager->findNextGames()[0] : null;
         
-        $form->handleRequest($request);
+        if ($nextGame instanceof Game && $nextGame->isFull()) {
+            return $this->render('enroll/index.html.twig', [
+                'nextGame' => $nextGame,
+            ]);
+        }
+        
+        $player = new Player();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            if (!$nextGame instanceof Game){
-                $session->getFlashBag()->add('error', 'Pas de prochain match défini.');
-            }
-            
-            $player = $form->getData();
-            $team = $gameManager->getTeamToFill($nextGame);
-            $team->addPlayer($player);
+        $newPlayerForm = $this->createForm(PlayerType::class, $player);
+        $newPlayerForm->handleRequest($request);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($player);
-            $entityManager->flush();
-            
-            $session->getFlashBag()->add('info', 'Inscription réussie ! Tu peux consulter les équipes.');
+        if ($newPlayerForm->isSubmitted() && $newPlayerForm->isValid()) {
+            $formHandler->handleNewPlayerForm($newPlayerForm, new Session(), $nextGame);
 
             return $this->redirectToRoute('admin');
         }
         
         return $this->render('enroll/index.html.twig', [
             'nextGame' => $nextGame,
-            'form' => $form->createView()
+            'form' => $newPlayerForm->createView()
         ]);
     }
 }

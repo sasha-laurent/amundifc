@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Team
 {
+    const MAX_PLAYERS = 9;
+    
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -74,5 +76,10 @@ class Team
         }
 
         return $this;
+    }
+    
+    public function isFull($max = self::MAX_PLAYERS): bool
+    {
+        return $this->players->count() >= $max;
     }
 }

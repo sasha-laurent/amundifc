@@ -14,6 +14,9 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class GameRepository extends ServiceEntityRepository
 {
+    /**
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Game::class);
@@ -24,7 +27,7 @@ class GameRepository extends ServiceEntityRepository
      */
     public function findNextGame()
     {
-        $now = new \DateTime();
+        $now = new \DateTime('-1 day');
         
         return $this->createQueryBuilder('m')
             ->andWhere('m.date > :date')
@@ -37,11 +40,11 @@ class GameRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Game 
+     * @return Game[]
      */
     public function findNextGames()
     {
-        $now = new \DateTime();
+        $now = new \DateTime('-1 day');
         
         return $this->createQueryBuilder('m')
             ->andWhere('m.date > :date')
@@ -51,16 +54,4 @@ class GameRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    /*
-    public function findOneBySomeField($value): ?Game
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

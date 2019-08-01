@@ -52,6 +52,8 @@ function removePlayer(element) {
                 if (false !== result.removed) {
                     playerRow.remove();
                 }
+                
+                // todo : display alerts from result.alerts
             })
             .fail(function(result){
                 playerRow.fadeIn(300);

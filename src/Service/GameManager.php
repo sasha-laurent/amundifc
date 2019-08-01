@@ -37,7 +37,8 @@ class GameManager {
     /**
      * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(EntityManagerInterface $em) 
+    {
         $this->em = $em;
     }
     
@@ -48,7 +49,12 @@ class GameManager {
      * 
      * @throws TooManyTeamsException
      */
-    public function getTeamToFill(Game $game) : Team {
+    public function getTeamToFill(Game $game) : Team 
+    {
+        if ($game->isFull()) {
+            throw new TooManyPlayersException('Both teams are full !');
+        }
+
         $teamCount = $game->getTeams()->count();
         
         if (0 === $teamCount) {
@@ -80,5 +86,33 @@ class GameManager {
         }
         
         throw new TooManyTeamsException('You can\'t have more than two teams !');
+    }
+    
+    /**
+     * @return array
+     */
+    public function findNextGames() : array
+    {
+        return $this->em->getRepository(Game::class)->findNextGames();
+    }
+
+        /**
+     * @param Game $game
+     * 
+     * @return bool
+     */
+    public function validateNewGame(Game $game) : bool
+    {
+        $gameRepo = $this->em->getRepository(Game::class);
+        
+        return !$gameRepo->findOneBy(['date' => $game->getDate()]) instanceof Game;
+    }
+    
+    public function saveGame(Game $game) : bool
+    {
+        $this->em->persist($game);
+        $this->em->flush();
+        
+        return true;
     }
 }

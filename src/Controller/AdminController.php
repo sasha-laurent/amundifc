@@ -23,9 +23,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Game;
 use App\Form\GameType;
-use App\Repository\GameRepository;
+use App\FormHandler\FormHandler;
+use App\Service\GameManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Description of AdminController
@@ -37,35 +39,30 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      * 
-     * @param Request        $request
-     * @param GameRepository $gameRepo
+     * @param Request     $request
+     * @param GameManager $gameManager
      * 
      * @return Response
      */
-    public function indexAction(Request $request, GameRepository $gameRepo) 
+    public function indexAction(Request $request, GameManager $gameManager, FormHandler $formHandler) 
     {
-        $nextGames = $gameRepo->findNextGames();
-        $nextGame = array_shift($nextGames);
-        
-        $newGame = new Game();
+        $newGame = new Game();                
+
         $newGameForm = $this->createForm(GameType::class, $newGame);
-        
         $newGameForm->handleRequest($request);
 
         if ($newGameForm->isSubmitted() && $newGameForm->isValid()) {
-            $newGame = $newGameForm->getData();
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($newGame);
-            $entityManager->flush();
-
+            $formHandler->handleNewGameForm($newGameForm, new Session());
+            
             return $this->redirectToRoute('admin');
         }
-        
+
+        $nextGames = $gameManager->findNextGames();
+        $nextGame = array_shift($nextGames);
         
         return $this->render('admin/index.html.twig', [
-            'nextGame' => $nextGame,
             'otherGames' => $nextGames,
+            'nextGame' => $nextGame,
             'newGameForm' => $newGameForm->createView()
         ]);
     }

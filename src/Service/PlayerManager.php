@@ -32,13 +32,13 @@ use Doctrine\ORM\EntityManagerInterface;
 class PlayerManager {
     
     /** @var EntityManagerInterface */
-    private $entityManager;
+    private $em;
     
     /**
-     * @param \App\Service\EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $entityManager) {
-        $this->entityManager = $entityManager;
+    public function __construct(EntityManagerInterface $em) {
+        $this->em = $em;
     }
     
     /**
@@ -60,9 +60,9 @@ class PlayerManager {
         foreach ($game->getTeams() as $team) {
             if ($team->getId() !== $oldTeam->getId()) {
                 $player->addTeam($team);
-                $this->entityManager->flush();
+                $this->em->flush();
                 
-                return $team->getId();
+                return $team;
             }
         }
         
@@ -73,9 +73,10 @@ class PlayerManager {
      * @param Game $game
      * @param Player $player
      * 
-     * @return int|boolean
+     * @return boolean
      */
-    public function removeFromGame(Game $game, Player $player) {
+    public function removeFromGame(Game $game, Player $player) : bool
+    {
         
         $oldTeam = $this->findPlayerTeamGame($game, $player);
         
@@ -84,7 +85,7 @@ class PlayerManager {
         }
 
         $oldTeam->removePlayer($player);
-        $this->entityManager->flush();
+        $this->em->flush();
         
         return true;
     }
@@ -93,9 +94,10 @@ class PlayerManager {
      * @param Game $game
      * @param Player $player
      * 
-     * @return Team|boolean
+     * @return Team
      */
-    private function findPlayerTeamGame(Game $game, Player $player) {
+    public function findPlayerTeamGame(Game $game, Player $player) : ?Team
+    {
         foreach ($game->getTeams() as $gameTeam) {
             foreach ($player->getTeams() as $playerTeam) {
                 if ($gameTeam->getId() === $playerTeam->getId()) {
@@ -104,6 +106,14 @@ class PlayerManager {
             }
         }
         
-        return false;
+        return null;
+    }
+    
+    public function savePlayer(Player $player) : bool
+    {
+        $this->em->persist($player);
+        $this->em->flush();
+        
+        return true;
     }
 }

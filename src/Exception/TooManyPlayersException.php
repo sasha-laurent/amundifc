@@ -26,5 +26,5 @@ use Symfony\Component\Validator\Exception\RuntimeException;
  *
  * @author sasha
  */
-class TooManyTeamsException extends RuntimeException {
+class TooManyPlayersException extends RuntimeException {
 }

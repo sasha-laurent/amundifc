@@ -34,16 +34,27 @@ class Game
         $this->teams = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
+    /**
+     * @param \DateTimeInterface $date
+     * 
+     * @return \self
+     */
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
@@ -59,6 +70,13 @@ class Game
         return $this->teams;
     }
 
+    /**
+     * @param \App\Entity\Team $team
+     * 
+     * @return \self
+     * 
+     * @throws TooManyTeamsException
+     */
     public function addTeam(Team $team): self
     {
         if (count($this->teams) >= 2) {
@@ -73,6 +91,11 @@ class Game
         return $this;
     }
 
+    /**
+     * @param \App\Entity\Team $team
+     * 
+     * @return \self
+     */
     public function removeTeam(Team $team): self
     {
         if ($this->teams->contains($team)) {
@@ -84,5 +107,22 @@ class Game
         }
 
         return $this;
+    }
+    
+    /**
+     * @param int $max
+     *
+     * @return bool
+     */
+    public function isFull($max = Team::MAX_PLAYERS*2): bool 
+    {
+        $countPlayers = 0;
+
+        /** @var Team $team */
+        foreach ($this->teams as $team) {
+            $countPlayers += $team->getPlayers()->count();
+        }
+        
+        return $countPlayers >= $max;
     }
 }
