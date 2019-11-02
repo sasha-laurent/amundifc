@@ -26,6 +26,8 @@ class Team
     private $relatedGame;
 
     /**
+     * @var ArrayCollection
+     * 
      * @ORM\ManyToMany(targetEntity="App\Entity\Player", inversedBy="teams")
      */
     private $players;

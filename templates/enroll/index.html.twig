@@ -18,19 +18,29 @@
             
             {% if nextGame is not empty %}
                 <hr/>
-                <h3>Les inscrits</h3>
+                {% set team1 = nextGame.teams.first %}
+                {% set team2 = nextGame.teams.next %}
+                {% set countTeam1 = 0 %}
+                {% set countTeam2 = 0 %}
+                {% if team1 is not empty %}
+                    {% set countTeam1 = team1.players.count %}
+                {% endif %}
+                {% if team2 is not empty %}
+                    {% set countTeam2 = team2.players.count %}
+                {% endif %}
+                <h3>Les inscrits ({{ countTeam1 ~ ' vs ' ~ countTeam2 }})</h3>
                 <div class="player-list">
                 {% for team in nextGame.teams %}
-                    {% if loop.index == 2 %}
-                        <hr/>
+                    {% set loopTeams = loop %}
+                    {% if loopTeams.index == 2 %}
+                    <hr/>
                     {% endif %}
-                    <ul>
-                        {% for player in team.players %}
-                            <li>{{ player.name }}</li>
-                        {% endfor %}
-                    </ul>
+                    <div class="field-team">
+                        {% include 'enroll/player_position.html.twig' %}
+                    </div>
                 {% endfor %}
                 </div>
+                <em>Les positions, c'est juste pour faire joli.</em>
             {% endif %}
         </div>
     </div>

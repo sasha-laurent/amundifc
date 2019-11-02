@@ -61,7 +61,7 @@ body {
 }
 
 footer {
-    position: fixed;
+    position: static;
     bottom: 0;
     text-align: center;
     vertical-align: central;
@@ -102,4 +102,17 @@ footer {
 .team.team-2 table tbody tr:nth-of-type(even) {
     background-color: #b478c3;
     color: #F8F9FA;
+}
+
+.lineup-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 10px;
+}
+
+.player-position {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

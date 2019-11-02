@@ -1,0 +1,24 @@
+{% for i in 1..9 %}
+    {% if loopTeams.index == 1 %}
+        {% set beginRowIndices = [1, 2, 5, 7] %}
+        {% set endRowIndices = [1, 4, 6, 9] %}
+    {% else %}
+        {% set beginRowIndices = [1, 4, 6, 9] %}
+        {% set endRowIndices = [3, 5, 8, 9] %}
+    {% endif %}
+
+    {% if i in beginRowIndices  %}
+        <div class ="row col-sm-12 lineup-row">
+    {% endif %}
+            <div class="player-position">
+                {% if i == 1 %} 
+                    {% set player = team.players.first %} 
+                {% else %}
+                    {% set player = team.players.next %}
+                {% endif %}
+                <i class="fas fa-user"></i>{% if player is not empty %} {{ player.name }} {% endif %}
+            </div>
+    {% if i in endRowIndices %}
+        </div>
+    {% endif %}
+{% endfor %}
