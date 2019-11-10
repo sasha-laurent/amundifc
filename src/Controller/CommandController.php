@@ -21,26 +21,40 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\GameRepository;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
- * Description of TeamsController
+ * Description of CommandController
  *
  * @author sasha
  */
-class TeamsController extends AbstractController
-{
+class CommandController extends AbstractController {
+    
     /**
-     * @Route("/teams", name="teams")
+     * @Route("/migrate", name="migrate")
      * 
-     * @param GameRepository $gameRepo
+     * @param KernelInterface $kernel
      * 
-     * @return type
+     * @return Response
      */
-    public function indexAction(GameRepository $gameRepo) 
-    {
-        return $this->render('teams/index.html.twig', [
-            'nextGame' => $gameRepo->findNextGame()
+    public function migrateAction(KernelInterface $kernel) {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'doctrine:migration:migrate',
+            '--no-interaction' => true
         ]);
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $content = $output->fetch();
+
+        return new Response($content);
     }
 }

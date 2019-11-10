@@ -33,7 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  *
  * @author sasha
  */
-class AjaxController  extends AbstractController {
+class AjaxController extends AbstractController {
 
     /**
      * @Route("/switch/{game}/{player}", name="switch_team")
