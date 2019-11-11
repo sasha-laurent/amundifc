@@ -38,13 +38,14 @@ class AdminController extends AbstractController
 {
     /**
      * @Route("/admin", name="admin")
+     * @Route("/admin/{gameId}", name="admin_game")
      * 
      * @param Request     $request
      * @param GameManager $gameManager
      * 
      * @return Response
      */
-    public function indexAction(Request $request, GameManager $gameManager, FormHandler $formHandler) 
+    public function adminGameAction(Request $request, GameManager $gameManager, FormHandler $formHandler) 
     {
         $newGame = new Game();                
 
@@ -58,11 +59,20 @@ class AdminController extends AbstractController
         }
 
         $nextGames = $gameManager->findNextGames();
-        $nextGame = array_shift($nextGames);
+
+        if (!empty($gameId = $request->get('gameId'))) {
+            $game = $gameManager->find($request->get('gameId'));
+        }
+        
+        if (empty($game)) {
+            $game = $nextGames->current();
+        }
+        
+        $nextGames->removeElement($game);
         
         return $this->render('admin/index.html.twig', [
             'otherGames' => $nextGames,
-            'nextGame' => $nextGame,
+            'nextGame' => $game,
             'newGameForm' => $newGameForm->createView()
         ]);
     }

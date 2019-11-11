@@ -71,24 +71,28 @@ class FormHandler {
     /**
      * @param Form $form
      * @param Session $session
-     * @param Game $nextGame
      * 
-     * @return bool
+     * @return string
      */
-    public function handleNewPlayerForm(Form $form, Session $session, Game $nextGame) : bool
+    public function handleNewPlayerForm(Form $form, Session $session) : string
     {
+        $nextGame = !empty($this->gameManager->findNextGames()) ? $this->gameManager->findNextGames()[0] : null;
+        
         if (!$nextGame instanceof Game){
             $session->getFlashBag()->add('danger', 'Pas de prochain match défini... Mais comment as-tu réussi cette prouesse ?!');
 
-            return false;
+            return 0;
         }
 
         $player = $form->getData();
-        $team = $this->gameManager->getTeamToFill($nextGame);
+        $game = $form->get('game')->getData();
+        $team = $this->gameManager->getTeamToFill($game);
         $team->addPlayer($player);
 
         $session->getFlashBag()->add('success', 'Inscription réussie ! Tu peux commencer à rentrer dans ton match ');
         
-        return $this->playerManager->savePlayer($player);
+        $this->playerManager->savePlayer($player);
+        
+        return $game->getId();
     }
 }

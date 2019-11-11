@@ -7,10 +7,11 @@
             <h1>Administration</h1>
         </div>
     </div>
+    <hr/>
     {% if nextGame is not empty %}
     <div class="row">
         <div class="col-sm-12">
-            <h3>Prochain match : {{ nextGame.date|date('d/m/Y') }}</h3>
+            <h3>Match du {{ nextGame.date|date('d/m/Y') }}</h3>
             <div class="row">
             {% for team in nextGame.teams %} 
                 {% set playerNameFloat = 'float-right' %}
@@ -22,6 +23,9 @@
                 <div class="col-sm-6 team team-{{ loop.index }}">
                     <table class="table table-striped">
                         <tbody data-team="{{ team.id }}">
+                        {% if team.players is empty and loop.index==1 %}
+                            <tr class="player-row"></tr>
+                        {% endif %}
                         {% for player in team.players %}
                             {% include('admin/player_row.html.twig') %}
                         {% endfor %}
@@ -35,7 +39,7 @@
     <hr/>
     <div class="row">
         <div class="col-sm-12">
-            <h2>Autres matchs prévus : {% for game in otherGames %}{{ game.date|date('d/m/Y') }}{% if not loop.last %}, {% endif %}{% endfor %}</h2>
+            <h2>Autres matchs prévus : {% for game in otherGames %}<a href="{{ path('admin_game', {gameId:game.id}) }}">{{ game.date|date('d/m/Y') }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</h2>
         </div>
     </div>
     <hr/>

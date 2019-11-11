@@ -58,9 +58,9 @@ class EnrollController extends AbstractController
         $newPlayerForm->handleRequest($request);
 
         if ($newPlayerForm->isSubmitted() && $newPlayerForm->isValid()) {
-            $formHandler->handleNewPlayerForm($newPlayerForm, new Session(), $nextGame);
+            $gameId = $formHandler->handleNewPlayerForm($newPlayerForm, new Session());
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('admin_game', ['gameId' => $gameId]);
         }
         
         return $this->render('enroll/index.html.twig', [

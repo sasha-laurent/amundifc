@@ -18,11 +18,15 @@
  */
 namespace App\Form;
 
+use DateTime;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Entity\Player;
+use App\Entity\Game;
+use App\Repository\GameRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
@@ -36,9 +40,24 @@ class PlayerType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Ton pseudo'
+                'label' => 'Ton pseudo',
+                'attr' => ['placeholder' => 'Ex : Rotaldo']
             ])
-            ->add('save', SubmitType::class)
+            ->add('game', EntityType::class, [
+                'label' => 'Pour quel match ?',
+                'class' => Game::class,
+                'query_builder' => function (GameRepository $er) {
+                    $now = new DateTime();
+                
+                    return $er->createQueryBuilder('m')
+                        ->andWhere('m.date > :date')
+                        ->setParameter('date', $now)
+                        ->orderBy('m.date', 'ASC');
+                },
+                'choice_label' => 'getDateString',
+                'mapped' => false
+            ])
+            ->add('S\'inscrire', SubmitType::class)
         ;
     }
 

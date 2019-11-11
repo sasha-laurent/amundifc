@@ -4,12 +4,12 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-12">
-            <h1>Inscriptions pour le prochain match</h1>
+            <h1>Inscriptions pour les prochains matchs</h1>
             {% if nextGame is not empty %}
                 {% if nextGame.isFull %}
                 <h3>Désolé, le prochain match est complet.</h3>
                 {% else %}
-                <h3>Inscris-toi pour le {{ nextGame.date|date('d/m/Y') }} !</h3>
+                    <hr>
                 {{ form(form) }}
                 {% endif %}
             {% else %}
@@ -28,7 +28,7 @@
                 {% if team2 is not empty %}
                     {% set countTeam2 = team2.players.count %}
                 {% endif %}
-                <h3>Les inscrits ({{ countTeam1 ~ ' vs ' ~ countTeam2 }})</h3>
+                <h3>Les inscrits pour le {{ nextGame.date|date('d/m/Y') }} ({{ countTeam1 ~ ' vs ' ~ countTeam2 }})</h3>
                 <div class="player-list">
                 {% for team in nextGame.teams %}
                     {% set loopTeams = loop %}
@@ -40,7 +40,7 @@
                     </div>
                 {% endfor %}
                 </div>
-                <em>Les positions, c'est juste pour faire joli.</em>
+                <em>Les positions, c'est juste pour faire joli (pour l'instant).</em>
             {% endif %}
         </div>
     </div>

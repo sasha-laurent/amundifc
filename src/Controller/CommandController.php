@@ -32,8 +32,8 @@ use Symfony\Component\Console\Output\BufferedOutput;
  *
  * @author sasha
  */
-class CommandController extends AbstractController {
-    
+class CommandController extends AbstractController 
+{
     /**
      * @Route("/migrate", name="migrate")
      * 
@@ -48,6 +48,31 @@ class CommandController extends AbstractController {
         $input = new ArrayInput([
             'command' => 'doctrine:migration:migrate',
             '--no-interaction' => true
+        ]);
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $content = $output->fetch();
+
+        return new Response($content);
+    }
+
+    /**
+     * @Route("/cc", name="cache_clear")
+     * 
+     * @param KernelInterface $kernel
+     * 
+     * @return Response
+     */
+    public function cacheClearAction(KernelInterface $kernel) {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'cache:clear',
+            '--no-interaction' => true,
+            '--env' => 'prod'
         ]);
 
         $output = new BufferedOutput();

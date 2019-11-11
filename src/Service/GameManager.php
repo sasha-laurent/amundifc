@@ -21,6 +21,7 @@ namespace App\Service;
 
 use App\Entity\Game;
 use App\Entity\Team;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Exception\TooManyTeamsException;
 
@@ -91,9 +92,17 @@ class GameManager {
     /**
      * @return array
      */
-    public function findNextGames() : array
+    public function findNextGames() : ArrayCollection
     {
-        return $this->em->getRepository(Game::class)->findNextGames();
+        return new ArrayCollection($this->em->getRepository(Game::class)->findNextGames());
+    }
+    
+    /**
+     * @return Game
+     */
+    public function find(int $id) : Game
+    {
+        return $this->em->getRepository(Game::class)->find($id);
     }
 
         /**

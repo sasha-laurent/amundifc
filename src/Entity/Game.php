@@ -125,4 +125,12 @@ class Game
         
         return $countPlayers >= $max;
     }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getDateString(): ?string
+    {
+        return date_format($this->date, 'd/m/Y (l)');
+    }
 }

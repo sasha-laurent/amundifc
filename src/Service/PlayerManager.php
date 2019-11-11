@@ -57,6 +57,11 @@ class PlayerManager {
 
         $oldTeam->removePlayer($player);
         
+        if ($game->getTeams()->count() <= 1) {
+            $game->addTeam($team = new Team());
+                $this->em->persist($team);
+        }
+        
         foreach ($game->getTeams() as $team) {
             if ($team->getId() !== $oldTeam->getId()) {
                 $player->addTeam($team);

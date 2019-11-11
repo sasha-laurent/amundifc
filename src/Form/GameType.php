@@ -46,9 +46,12 @@ class GameType extends AbstractType
                 'attr' => [
                     'class' => 'js-datepicker',
                     'autocomplete' => 'off'
-                ]
+                ],
+                'label' => 'Choisis une date',
             ])
-            ->add('save', SubmitType::class)
+            ->add('save', SubmitType::class, [
+                'label' => 'Créer'
+            ])
         ;
     }
 
